@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projeto Liberta Assessoria — Traevo &amp; CRM Bitrix24</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#1F4E5A;
+  --accent-light:#EAF1F3;
+  --accent-soft:#2E6E7E;
+  --ok:#2E7D32;
+  --warn:#B5651D;
+  --danger:#B3261E;
+  --bg:#F6F8F9;
+  --card:#FFFFFF;
+  --text:#1B2B30;
+  --muted:#5C7077;
+  --border:#DCE6E8;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.55;}
+header.top{background:var(--accent);color:#fff;padding:18px 32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+header.top .brand{font-weight:800;font-size:1.3rem;letter-spacing:.5px;}
+header.top .brand span{font-weight:400;font-size:.85rem;opacity:.85;display:block;}
+header.top .for{font-size:.9rem;opacity:.9;text-align:right;}
+nav{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;display:flex;overflow-x:auto;}
+nav button{border:none;background:none;font-family:inherit;font-size:.92rem;font-weight:600;color:var(--muted);padding:16px 20px;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:.15s;}
+nav button:hover{color:var(--accent);}
+nav button.active{color:var(--accent);border-bottom-color:var(--accent);}
+main{max-width:1080px;margin:0 auto;padding:32px 20px 80px;}
+section{display:none;}
+section.active{display:block;animation:fade .25s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+h1.page-title{font-size:1.9rem;font-weight:800;color:var(--accent);margin-bottom:14px;}
+h2{font-size:1.3rem;font-weight:700;color:var(--accent);margin:32px 0 12px;}
+h3{font-size:1.05rem;font-weight:700;color:var(--accent-soft);margin:20px 0 8px;}
+p{margin-bottom:12px;color:var(--text);text-align:justify;}
+p.lead{font-size:1.05rem;color:var(--muted);text-align:justify;}
+strong{color:var(--accent);}
+.badges{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0;}
+.badge{background:var(--accent-light);color:var(--accent);font-weight:600;font-size:.85rem;padding:8px 14px;border-radius:999px;}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:18px 0;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center;}
+.card h3{margin-top:0;}
+.card p{font-size:.92rem;text-align:center;}
+/* fluxo macro (mockup) */
+.flow-wrap{margin:28px 0 8px;}
+.flow-title{font-weight:800;color:var(--accent);font-size:1.15rem;margin-bottom:18px;}
+.flow-row{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;justify-content:center;}
+.flow-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px 18px;text-align:center;flex:1;min-width:200px;display:flex;flex-direction:column;align-items:center;}
+.flow-arrow{display:flex;align-items:center;justify-content:center;padding:0 10px;color:var(--accent);font-size:1.6rem;flex:0 0 auto;}
+.flow-badge{background:var(--accent);color:#fff;font-weight:700;font-size:.72rem;letter-spacing:.5px;border-radius:999px;padding:5px 16px;margin-bottom:16px;}
+.flow-icon{width:56px;height:56px;border-radius:50%;background:var(--accent-light);display:flex;align-items:center;justify-content:center;margin-bottom:14px;color:var(--accent);}
+.flow-icon svg{width:26px;height:26px;}
+.flow-card h3{margin:0 0 8px;color:var(--accent);text-align:center;}
+.flow-card p{font-size:.85rem;color:var(--muted);text-align:center;margin:0;}
+.flow-footer{margin-top:26px;display:flex;align-items:center;justify-content:center;gap:14px;}
+.flow-footer .line{flex:1;border-top:2px dashed var(--border);max-width:140px;}
+.flow-footer .pill{background:var(--accent);color:#fff;font-weight:700;font-size:.85rem;border-radius:999px;padding:10px 26px;white-space:nowrap;}
+@media (max-width:900px){.flow-row{flex-direction:column;}.flow-arrow{transform:rotate(90deg);padding:10px 0;}.flow-footer .line{display:none;}}
+table{width:100%;border-collapse:collapse;margin:14px 0 22px;font-size:.88rem;}
+th,td{border:1px solid var(--border);padding:10px 12px;text-align:left;vertical-align:top;}
+th{background:var(--accent);color:#fff;font-weight:700;}
+tr:nth-child(even) td{background:var(--accent-light);}
+.tag{display:inline-block;font-size:.75rem;font-weight:700;padding:2px 9px;border-radius:6px;}
+.tag.ok{background:#E6F4EA;color:var(--ok);}
+.tag.no{background:#FBEAEA;color:var(--danger);}
+/* simulador */
+.sim-scenarios{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0 24px;}
+.sim-btn{flex:1;min-width:220px;background:var(--card);border:2px solid var(--border);border-radius:12px;padding:14px 16px;cursor:pointer;text-align:left;font-family:inherit;transition:.15s;}
+.sim-btn strong{display:block;color:var(--accent);font-size:.95rem;margin-bottom:4px;}
+.sim-btn span{font-size:.82rem;color:var(--muted);}
+.sim-btn.active{border-color:var(--accent);background:var(--accent-light);}
+.sim-grid{display:grid;grid-template-columns:1.1fr 0.8fr 1.1fr;gap:16px;align-items:start;}
+@media (max-width:900px){.sim-grid{grid-template-columns:1fr;}}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;min-height:420px;}
+.panel-head{background:var(--accent);color:#fff;padding:12px 16px;}
+.panel-head strong{display:block;font-size:.95rem;}
+.panel-head small{opacity:.8;font-size:.75rem;}
+.chat{flex:1;padding:14px;display:flex;flex-direction:column;gap:8px;overflow-y:auto;max-height:420px;background:#FBFDFD;}
+.msg{max-width:85%;padding:9px 12px;border-radius:10px;font-size:.85rem;}
+.msg.bot{align-self:flex-start;background:var(--accent-light);color:var(--text);border-bottom-left-radius:2px;}
+.msg.user{align-self:flex-end;background:var(--accent);color:#fff;border-bottom-right-radius:2px;}
+.api-mid{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px;text-align:center;}
+.api-mid .icon{width:64px;height:64px;border-radius:50%;background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:1.6rem;color:var(--accent);}
+.api-status{font-size:.85rem;color:var(--muted);font-weight:600;}
+.api-status.live{color:var(--ok);}
+.pipeline{padding:12px;display:flex;flex-direction:column;gap:10px;overflow-y:auto;max-height:420px;}
+.col{background:#FBFDFD;border:1px solid var(--border);border-radius:10px;padding:8px;}
+.col h4{font-size:.78rem;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:flex;justify-content:space-between;}
+.col .empty{font-size:.78rem;color:var(--muted);font-style:italic;}
+.kcard{background:#fff;border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:8px;padding:8px 10px;font-size:.78rem;margin-bottom:6px;}
+.kcard b{display:block;color:var(--accent);font-size:.82rem;}
+.sim-controls{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;}
+.btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:11px 20px;font-family:inherit;font-weight:700;font-size:.9rem;cursor:pointer;transition:.15s;}
+.btn:hover{background:var(--accent-soft);}
+.btn:disabled{background:#B7C5C8;cursor:not-allowed;}
+.btn.outline{background:#fff;border:2px solid var(--accent);color:var(--accent);}
+footer{background:var(--accent);color:#fff;text-align:center;padding:22px;font-size:.82rem;}
+footer small{display:block;opacity:.75;margin-top:4px;}
+.note{background:var(--accent-light);border-left:4px solid var(--accent);padding:12px 14px;border-radius:8px;font-size:.88rem;margin:14px 0;}
+.note.warn{background:#FBF1E6;border-left-color:var(--warn);}
+ul.clean{margin:0 0 16px 0;padding-left:22px;}
+ul.clean li{margin-bottom:6px;font-size:.92rem;text-align:justify;}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">TRAEVO<span>Hub de soluções tecnológicas</span></div>
+  <div class="for">Apresentado para<br><strong>Liberta Assessoria Financeira</strong></div>
+</header>
+
+<nav id="nav">
+  <button data-tab="visao" class="active">Visão Geral</button>
+  <button data-tab="sim">Simulador de Fluxo (IA + Bitrix24)</button>
+  <button data-tab="base">Base de Conhecimento IA (Completa)</button>
+  <button data-tab="proposta">Proposta de Trabalho &amp; Valores</button>
+  <button data-tab="escopo">Escopo de Entrega do Projeto</button>
+</nav>
+
+<main>
+
+<!-- ===================== VISÃO GERAL ===================== -->
+<section id="visao" class="active">
+  <h1 class="page-title">IA Conversacional &amp; CRM Bitrix24</h1>
+  <p class="lead">Este projeto tem como objetivo a implantação de uma <strong>Inteligência Artificial Conversacional (LLM)</strong> — a "Lili" — integrada diretamente ao <strong>Bitrix24 CRM</strong>, automatizando a triagem e qualificação dos leads de renegociação de financiamento veicular e empréstimo com garantia de veículo da Liberta Assessoria Financeira. A tecnologia de IA conversacional e a equipe técnica que opera essa camada são fornecidas pela <strong>EVA</strong>, parceira tecnológica do projeto. A condução, arquitetura, integração com o Bitrix24 e entrega do projeto como um todo são <strong>100% Traevo</strong>.</p>
+
+  <div class="badges">
+    <span class="badge">WhatsApp Oficial + Números Humanizados</span>
+    <span class="badge">Integração Bilateral (Webhooks/API)</span>
+    <span class="badge">Distribuição por Unidade/Consultor</span>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <h3>Inteligência Artificial Conversacional (Lili)</h3>
+      <p>Motor LLM da EVA treinado com a base de conhecimento da Liberta. Conduz a conversa pelo fluxo Problema → Nome → Banco → Titularidade → Status → Unidade, qualifica o lead e dispara o webhook de criação de card no Bitrix24.</p>
+    </div>
+    <div class="card">
+      <h3>Funil de Atendimento Bitrix24</h3>
+      <p>Pipeline parametrizado com as colunas "Novo Lead", "Em Qualificação", "Qualificado / Agendado", "Fora de Escopo / Não Atendido" e "Encerrado", garantindo rastreabilidade total de cada lead até o consultor responsável.</p>
+    </div>
+    <div class="card">
+      <h3>Arquitetura do Escopo Integrado</h3>
+      <p>Toda conversa iniciada nos números de WhatsApp da Liberta (humanizados e oficiais) passa pela triagem autônoma da Lili — a EVA absorve a complexidade de operar múltiplos números dentro de uma única camada de IA. Leads qualificados são distribuídos automaticamente para o consultor da unidade correta (Taguatinga, Sobradinho, Valparaíso, Goiânia ou Anápolis); casos fora de escopo ou bancos não atendidos são registrados e encerrados sem intervenção humana.</p>
+    </div>
+  </div>
+
+  <div class="flow-wrap">
+    <div class="flow-title">Fluxo Macro: Como o fluxo funciona, passo a passo</div>
+    <div class="flow-row">
+      <div class="flow-card">
+        <span class="flow-badge">PASSO 1</span>
+        <div class="flow-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="9" cy="11" r="0.5" fill="currentColor"/><circle cx="12" cy="11" r="0.5" fill="currentColor"/><circle cx="15" cy="11" r="0.5" fill="currentColor"/></svg>
+        </div>
+        <h3>WhatsApp de Entrada</h3>
+        <p>Cliente com dívida em atraso (financiamento veicular ou empréstimo com garantia de veículo) inicia a conversa em um dos números da Liberta.</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-card">
+        <span class="flow-badge">PASSO 2</span>
+        <div class="flow-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M9 3h6v2H9z" fill="currentColor" stroke="none"/><path d="M9 11l2 2 4-4"/></svg>
+        </div>
+        <h3>Triagem da Lili</h3>
+        <p>A IA identifica o problema, coleta nome, banco, titularidade, status do contrato e unidade de preferência, aplicando as regras de escopo e anti-robotização.</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-card">
+        <span class="flow-badge">PASSO 3</span>
+        <div class="flow-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M8.2 7.2 10 15.5M15.8 7.2 14 15.5"/></svg>
+        </div>
+        <h3>Integração API / Webhook</h3>
+        <p>Dados estruturados são enviados ao Bitrix24, criando ou atualizando automaticamente um card no pipeline parametrizado.</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-card">
+        <span class="flow-badge">PASSO 4</span>
+        <div class="flow-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg>
+        </div>
+        <h3>Gestão do Consultor</h3>
+        <p>O consultor da unidade assume o card já qualificado e com horário sugerido, ou trata o caso encerrado/fora de escopo registrado no histórico.</p>
+      </div>
+    </div>
+    <div class="flow-footer">
+      <div class="line"></div>
+      <span class="pill">Fluxo contínuo e automatizado</span>
+      <div class="line"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SIMULADOR ===================== -->
+<section id="sim">
+  <h1 class="page-title">Simulador Operacional de Fluxo Integrado</h1>
+  <p class="lead">Veja em tempo real como a Lili interage de forma autônoma seguindo as diretrizes da Base de Conhecimento, formata e encapsula os dados, envia-os via webhook/API e cria automaticamente o card no painel do Bitrix24 — onde o consultor da unidade assume o atendimento.</p>
+
+  <p style="font-weight:700;color:var(--accent);margin-top:10px;">Selecione um Cenário Técnico para Simular:</p>
+  <div class="sim-scenarios">
+    <button class="sim-btn active" data-scenario="0"><strong>Cenário 1: Banco Negociante</strong><span>Financiamento Itaú em atraso — fluxo completo até o agendamento.</span></button>
+    <button class="sim-btn" data-scenario="1"><strong>Cenário 2: Fora de Escopo</strong><span>Empréstimo pessoal/CLT — encerramento automático, sem garantia de veículo.</span></button>
+    <button class="sim-btn" data-scenario="2"><strong>Cenário 3: Banco Não Atendido</strong><span>Financiamento com banco BMG — fora da lista de negociantes.</span></button>
+  </div>
+
+  <div class="sim-grid">
+    <div class="panel">
+      <div class="panel-head"><strong>Lili — Assistente Liberta</strong><small>Online e Operando · WhatsApp API</small></div>
+      <div class="chat" id="chat"><p style="font-size:.85rem;color:var(--muted);padding:8px;">Escolha um cenário acima e clique em "Iniciar Simulação" para rodar a demonstração.</p></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><strong>Integração API</strong><small>Webhooks bilaterais EVA ↔ Bitrix24</small></div>
+      <div class="api-mid">
+        <div class="icon" id="apiIcon">⇄</div>
+        <div class="api-status" id="apiStatus">Ocioso — aguardando dados conversacionais da Lili...</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><strong>Bitrix24 — Pipeline</strong><small>Consultor da unidade</small></div>
+      <div class="pipeline">
+        <div class="col"><h4>Novo Lead <span id="c0">0</span></h4><div class="empty" id="col0">Nenhum card criado. Conclua o fluxo da Lili para gerar o card via webhook.</div></div>
+        <div class="col"><h4>Em Qualificação <span id="c1">0</span></h4><div class="empty" id="col1">—</div></div>
+        <div class="col"><h4>Qualificado / Agendado <span id="c2">0</span></h4><div class="empty" id="col2">—</div></div>
+        <div class="col"><h4>Fora de Escopo / Não Atendido <span id="c3">0</span></h4><div class="empty" id="col3">—</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sim-controls">
+    <button class="btn" id="startSim">Iniciar Simulação</button>
+    <button class="btn outline" id="resetSim">Reiniciar</button>
+  </div>
+</section>
+
+<!-- ===================== BASE DE CONHECIMENTO ===================== -->
+<section id="base">
+  <h1 class="page-title">Base de Conhecimento e Roteamento da IA (Lili)</h1>
+  <p class="lead">Documento técnico estruturado contendo o fluxo completo de qualificação consolidado da Liberta Assessoria, parametrizado para o motor LLM da EVA.</p>
+
+  <h2>1. Persona e Mensagem de Entrada</h2>
+  <p><strong>Tom:</strong> acolhedor, direto, sem termos jurídicos complexos. <strong>Identidade:</strong> a Lili se declara assistente virtual da Liberta Assessoria, jamais finge ser atendente humano. Discurso alinhado ao site institucional: garantia contratual de até 45% de desconto, 100% extrajudicial, atuação em DF e GO.</p>
+
+  <h2>2. Fluxo de Qualificação (9 etapas)</h2>
+  <table>
+    <tr><th>Etapa</th><th>Objetivo</th><th>Variável / Resultado</th></tr>
+    <tr><td>1. Problema</td><td>Identificar o tipo de dívida (financiamento veicular / empréstimo com garantia de veículo)</td><td>Confirma escopo de atuação</td></tr>
+    <tr><td>2. Nome</td><td>Capturar nome completo do cliente</td><td>{Nome}</td></tr>
+    <tr><td>3. Banco</td><td>Identificar a instituição financeira</td><td>{Banco}</td></tr>
+    <tr><td>4. Titularidade</td><td>Confirmar se o cliente é o titular do contrato</td><td>{Titularidade}</td></tr>
+    <tr><td>5. Status do contrato</td><td>Saber se está em dia, em atraso ou quitado</td><td>{StatusPagamento} — se quitado, encerra (fora de escopo)</td></tr>
+    <tr><td>6. Unidade</td><td>Capturar a unidade de preferência</td><td>{Unidade} ∈ {Taguatinga, Sobradinho, Valparaíso, Goiânia, Anápolis}</td></tr>
+    <tr><td>7. Qualificação</td><td>Consolidar os dados coletados e marcar lead como qualificado</td><td>{qualificacao_concluida} = true</td></tr>
+    <tr><td>8. Agendamento</td><td>Apresentar 2 horários do consultor responsável (Seg–Sex, 9h–17h)</td><td>Mensagem de passagem de bastão nominal</td></tr>
+    <tr><td>9. Encerramento / Handoff</td><td>Encerrar casos fora de fluxo (banco não atendido, fora de escopo, quitado, desistência)</td><td>{atendimento_encerrado} = true — bloqueia reabertura</td></tr>
+  </table>
+
+  <h2>3. Equipe por Unidade</h2>
+  <table>
+    <tr><th>Unidade</th><th>Consultores</th></tr>
+    <tr><td>Taguatinga (DF)</td><td>Juliana e Cristielly</td></tr>
+    <tr><td>Sobradinho (DF)</td><td>Natacha</td></tr>
+    <tr><td>Valparaíso (GO)</td><td>Geovana</td></tr>
+    <tr><td>Goiânia (GO)</td><td>Eduarda e Carlos</td></tr>
+    <tr><td>Anápolis (GO)</td><td>Caroline</td></tr>
+  </table>
+
+  <h2>4. Bancos Negociantes (sempre tratados como atendidos)</h2>
+  <p>Itaú, Santander, Bradesco, BV Financeira, Panamericano, Fiat, RCI/Renault, GMAC/Chevrolet, Credifibra, Nissan, Hyundai, PSA/Stellantis, Banco Finasa. Em caso de colisão de regras, o banco negociante <strong>sempre vence</strong> — nunca é classificado como "não atendido".</p>
+
+  <h2>5. Regras de Exclusão de Escopo (Hard Stops)</h2>
+  <table>
+    <tr><th>Situação</th><th>Motivo registrado / ação</th></tr>
+    <tr><td>Empréstimo sem veículo / ambíguo</td><td>Encerra com motivo "EmprestimoSemVeiculo"</td></tr>
+    <tr><td>Empréstimo pessoal / CLT / consignado / INSS</td><td>Encerra com motivo "CreditoNovoOuPessoal"</td></tr>
+    <tr><td>Novo financiamento veicular (não renegociação)</td><td>Encerra com motivo "NovoFinanciamentoVeicular"</td></tr>
+    <tr><td>Veículo já apreendido/recolhido</td><td>Encerra com motivo "VeiculoApreendido"</td></tr>
+    <tr><td>Banco BMG e outros fora da lista</td><td>Marcado como "banco não atendido", encerra o fluxo</td></tr>
+    <tr><td>Contrato já quitado</td><td>Fora de escopo — Liberta não atende contratos quitados</td></tr>
+  </table>
+
+  <h2>6. Diretrizes de "Anti-Robotização" (Firewalls de Comportamento)</h2>
+  <ul class="clean">
+    <li>Não repetir perguntas já respondidas (nome, banco, titularidade, status, unidade) — anti-loop.</li>
+    <li>Não orientar o cliente a procurar o banco, advogado, Justiça, nem explicar taxas/juros/CET — a Lili <strong>apenas qualifica e encaminha</strong>.</li>
+    <li>Não entrar em conversas emocionais, comentar áudios, músicas ou assuntos paralelos.</li>
+    <li>Não reabrir o fluxo após encerramento — qualquer mensagem após {atendimento_encerrado}=true recebe apenas resposta padrão de encaminhamento.</li>
+    <li>Não usar listas numeradas, múltiplas perguntas na mesma mensagem, ou fornecer endereço sem solicitação explícita.</li>
+  </ul>
+
+  <h2>7. Quando a IA escala para um humano e quando não escala</h2>
+  <p>Ponto central do projeto: a Lili deve resolver sozinha tudo o que for <strong>coleta e qualificação</strong>, e escalar (transferir para o consultor/Bitrix) apenas nos pontos em que a decisão deixa de ser de roteamento e passa a depender de avaliação humana, negociação ou ação comercial direta.</p>
+  <table>
+    <tr><th>Situação</th><th>A IA resolve sozinha</th><th>Escala para humano / Bitrix</th></tr>
+    <tr><td>Coleta de dados (nome, banco, titularidade, status, unidade)</td><td><span class="tag ok">Sim</span> — captura, valida e avança o fluxo</td><td>—</td></tr>
+    <tr><td>Banco dentro da lista de negociantes</td><td><span class="tag ok">Sim</span> — segue o fluxo normalmente</td><td>—</td></tr>
+    <tr><td>Banco fora da lista (ex.: BMG) / não atendido</td><td><span class="tag ok">Sim</span> — encerra com mensagem padrão</td><td>Card criado como "Não Atendido" para histórico</td></tr>
+    <tr><td>Fora de escopo (empréstimo pessoal, CLT, novo financiamento, veículo apreendido, quitado)</td><td><span class="tag ok">Sim</span> — encerra com motivo registrado</td><td>Card criado como "Fora de Escopo" para histórico</td></tr>
+    <tr><td>Qualificação concluída + unidade definida</td><td><span class="tag ok">Sim</span> — apresenta 2 horários e confirma agendamento</td><td>Card transferido ao consultor da unidade (handoff) com todos os dados</td></tr>
+    <tr><td>Cliente pede orientação jurídica, cálculo de desconto/juros ou "como funciona" em detalhe</td><td><span class="tag no">Não</span> — a Lili não orienta nem calcula</td><td>Escala: card sinalizado para consultor responder</td></tr>
+    <tr><td>Cliente pede para falar com humano / reclamação / Procon</td><td><span class="tag no">Não</span></td><td>Escala imediata: transferência de fila + notificação ao consultor/gestor</td></tr>
+    <tr><td>Cliente fora do horário comercial (fora Seg–Sex 9h–17h)</td><td><span class="tag ok">Sim</span> — registra e informa retorno no próximo dia útil</td><td>Follow-up automático (Neurosales) agenda nova tentativa</td></tr>
+    <tr><td>Conversa emocional, áudio, assuntos paralelos</td><td><span class="tag no">Não</span> — a Lili não responde a esse conteúdo</td><td>Se insistente, escala para consultor avaliar</td></tr>
+    <tr><td>Mensagem após {atendimento_encerrado}=true</td><td><span class="tag ok">Sim</span> — resposta padrão de encaminhamento</td><td>Card já está com o consultor; nova mensagem apenas registrada</td></tr>
+  </table>
+  <p>Esta tabela é a referência operacional para a configuração do roteamento na EVA e das automações no Bitrix24: tudo na coluna "resolve sozinha" deve estar coberto pelo <strong>Setup de Implementação da IA</strong>; tudo em "escala" deve ter um destino claro (fila, usuário ou estágio) definido no <strong>Setup de Integração</strong>.</p>
+
+  <div class="note warn">
+    <strong>Pontos críticos a validar com a equipe Liberta:</strong> regra de distribuição de leads em unidades com múltiplos consultores (Taguatinga e Goiânia); definição do "número mestre" entre os números oficiais e o papel dos números humanizados na operação da EVA; SLA de transição IA → humano após o handoff; confirmação da janela de atendimento (Seg–Sex 9h–17h); validação final da lista de bancos negociantes e textos de encerramento.
+  </div>
+</section>
+
+<!-- ===================== PROPOSTA ===================== -->
+<section id="proposta">
+  <h1 class="page-title">Proposta Comercial Analítica e Financeira</h1>
+  <p class="lead">Esta seção discrimina detalhadamente as atividades do projeto e seu enquadramento orçamentário, seguindo o mesmo modelo de proposta já utilizado em outros projetos Traevo. O escopo foca na implementação da Inteligência Artificial Conversacional (Lili, via EVA) em sinergia com a modelagem do CRM Bitrix24 — 100% Traevo.</p>
+
+  <h2>Bloco 1 — Serviços e Consultoria de Implantação (Setup)</h2>
+  <table>
+    <tr><th>Item de Implementação</th><th>Valor</th><th>Condição de Faturamento</th></tr>
+    <tr>
+      <td><strong>Setup de Implementação da Inteligência Artificial</strong><br>Parametrização do motor de IA conversacional (EVA), modelagem da base de conhecimento com o fluxo completo da Lili, persona, regras de escopo/firewall e configuração de canais.</td>
+      <td>R$ 5.000,00</td>
+      <td>R$ 3.000,00 na entrada<br>Restante em até 30 dias corridos</td>
+    </tr>
+    <tr>
+      <td><strong>Setup de Integração I.A. + CRM Bitrix24</strong><br>Desenvolvimento das conexões via API e Webhooks bilaterais (não restrito a webhooks pontuais), mapeamento de campos, pipeline parametrizado e regras de distribuição por unidade/consultor.</td>
+      <td>R$ 3.000,00</td>
+      <td>50% na entrada (R$ 1.500,00)<br>50% na conclusão da integração</td>
+    </tr>
+    <tr>
+      <td><strong>Consultoria de Ajustes e Organização das Automações no Bitrix24 (10h)</strong><br>Bônus para consolidar a parceria — revisão e organização das automações já existentes no Bitrix24 da Liberta.</td>
+      <td>Bônus<br>(incluso)</td>
+      <td>Sem cobrança adicional</td>
+    </tr>
+    <tr>
+      <td><strong>Consultoria de Fluxo de Conversa, Mapeamento de Processos e Organização (opcional)</strong><br>Construção do mapa completo de processos e do fluxo de conversa da IA, com organização documental do projeto.</td>
+      <td>R$ 1.500,00<br>(opcional)</td>
+      <td>Pagamento à vista</td>
+    </tr>
+    <tr>
+      <td><strong>Total Acumulado de Setup &amp; Consultorias</strong></td>
+      <td><strong>R$ 9.500,00</strong><br>(R$ 8.000,00 sem o item opcional)</td>
+      <td>Investimento pontual de implantação</td>
+    </tr>
+  </table>
+
+  <h2>Bloco 2 — Licenciamento e Custos de Tecnologia (SaaS)</h2>
+  <p>Custos recorrentes de infraestrutura, mantidos no mesmo modelo de outras implantações Traevo:</p>
+  <table>
+    <tr><th>Plataforma / Tecnologia</th><th>Valor</th><th>Faturamento e Modalidade</th></tr>
+    <tr><td>Bitrix24 — Licença</td><td>Já possui</td><td>Licença já adquirida pela Liberta — sem custo adicional de licenciamento</td></tr>
+    <tr><td>WhatsApp Oficial Integrado (API) — conectividade do(s) número(s) homologado(s) ao servidor de dados</td><td>A confirmar (conforme quantidade de números)</td><td>Mensalidade recorrente — cliente. Cada número adicional ao número mestre: + R$ 35,00/mês, acrescido na mensalidade</td></tr>
+    <tr><td>Licenciamento de Processamento da I.A. (EVA) — hospedagem, processamento do LLM próprio e manutenção das diretrizes conversacionais</td><td>R$ 1.260,00 / mês</td><td>Mensalidade recorrente — cliente</td></tr>
+    <tr><td>Plataforma de Automação (N8N) — orquestração dos fluxos de integração entre EVA e Bitrix24</td><td>A confirmar</td><td>Mensalidade recorrente — sob responsabilidade do cliente</td></tr>
+  </table>
+
+  <h2>Resumo Consolidado do Projeto</h2>
+  <table>
+    <tr><th>Item</th><th>Valor</th><th>Observação</th></tr>
+    <tr><td>Investimento Inicial de Setup (Bloco 1)</td><td>R$ 8.000,00 (+ R$ 1.500,00 opcional, à vista)</td><td>Entrada + restante conforme condições acima</td></tr>
+    <tr><td>Bitrix24 — Licença</td><td>Já possui</td><td>Sem custo adicional para a Liberta</td></tr>
+    <tr><td>Mensalidade IA (EVA)</td><td>R$ 1.260,00/mês</td><td>+ R$ 35,00/mês por número de WhatsApp adicional ao número mestre</td></tr>
+    <tr><td>WhatsApp Oficial (API) + N8N</td><td>A confirmar</td><td>Custos recorrentes mensais, de responsabilidade da Liberta — quantidade de números e plano N8N a definir</td></tr>
+    <tr><td>Bônus incluso</td><td>10h de consultoria de ajustes e organização das automações no Bitrix24</td><td>Sem custo — consolidação da parceria</td></tr>
+  </table>
+</section>
+
+<!-- ===================== ESCOPO DE ENTREGA ===================== -->
+<section id="escopo">
+  <h1 class="page-title">Escopo de Entrega do Projeto</h1>
+  <p class="lead">Resumo objetivo do que será entregue em cada bloco do projeto, refletindo a proposta comercial acima.</p>
+
+  <h2>Bloco 1 — Setup de Implementação da I.A. (EVA)</h2>
+  <ul class="clean">
+    <li>Base de conhecimento / persona da Lili: tom acolhedor, direto, identidade declarada, discurso alinhado ao site (garantia contratual, até 45% de desconto, 100% extrajudicial).</li>
+    <li>Migração integral do fluxo de qualificação (9 etapas) com todas as variáveis mapeadas para a configuração nativa da EVA.</li>
+    <li>Réplica das regras de hard stop (empréstimo sem veículo, CLT/consignado, novo financiamento, veículo apreendido, contrato quitado, bancos não atendidos).</li>
+    <li>Parametrização dos firewalls de anti-robotização (não repetição, não orientação externa, bloqueio pós-encerramento).</li>
+    <li>Validação de bancos negociantes como tabela de decisão com prioridade positiva garantida.</li>
+    <li>Configuração dos canais WhatsApp (números humanizados + oficiais) e do agendamento nativo respeitando o expediente Seg–Sex 9h–17h.</li>
+    <li>Follow-up inteligente (Neurosales) para retomada de leads sem resposta.</li>
+  </ul>
+
+  <h2>Bloco 2 — Setup de Integração I.A. + Bitrix24</h2>
+  <ul class="clean">
+    <li>Webhook de criação/atualização de card ao concluir a etapa de Unidade.</li>
+    <li>Mapeamento dos campos personalizados ({Banco}, {Titularidade}, {StatusPagamento}, {Unidade}, {fora_escopo_motivo}, {banco_nao_atendido} etc.).</li>
+    <li>Pipeline parametrizado: "Novo Lead", "Em Qualificação", "Qualificado / Agendado", "Fora de Escopo / Não Atendido", "Em Negociação", "Encerrado".</li>
+    <li>Regra de distribuição automática do card para o consultor correto da unidade.</li>
+    <li>Sincronização dos números de WhatsApp (oficiais e humanizados) via Open Channel / Contact Center do Bitrix24 — a EVA centraliza a operação independentemente da quantidade de números.</li>
+    <li>Lógica de agendamento multi-consultor (Taguatinga e Goiânia) consultando disponibilidade de agenda.</li>
+    <li>Encerramento e "pós-encerramento blindado" — sem reabertura automática do fluxo.</li>
+  </ul>
+
+  <h2>Bloco 3 — Consultoria de Ajustes e Organização das Automações (Bônus, 10h)</h2>
+  <ul class="clean">
+    <li>Revisão das automações já existentes no Bitrix24 da Liberta.</li>
+    <li>Ajustes de organização do funil e regras de visualização por unidade/consultor.</li>
+    <li>Sem custo adicional — bônus de boas-vindas para consolidar a parceria.</li>
+  </ul>
+
+  <h2>Bloco 4 — Consultoria de Fluxo de Conversa e Mapeamento de Processos (Opcional)</h2>
+  <ul class="clean">
+    <li>Construção/revisão do mapa completo de processos da operação.</li>
+    <li>Documentação do fluxo de conversa da IA e organização documental do projeto.</li>
+  </ul>
+</section>
+
+</main>
+
+<footer>
+  © 2026 Traevo CRM &amp; IA. Todos os direitos reservados. Confidencial — Liberta Assessoria Financeira.
+  <small>Powered by TRAEVO · Tecnologia e equipe de IA fornecidas por EVA</small>
+</footer>
+
+<script>
+// ---- Navegação entre seções ----
+const navButtons = document.querySelectorAll('#nav button');
+const sections = document.querySelectorAll('main > section');
+navButtons.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    navButtons.forEach(b=>b.classList.remove('active'));
+    sections.forEach(s=>s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ---- Simulador ----
+const scenarios = [
+  { // Cenário 1: Banco negociante - fluxo completo
+    name: "Financiamento Itaú em atraso",
+    messages: [
+      {who:'bot', text:'Olá! Aqui é a Lili, da Liberta Assessoria 😊 Você está com financiamento de veículo ou empréstimo com garantia de veículo em atraso?'},
+      {who:'user', text:'Isso, meu carro está financiado e estou atrasado.'},
+      {who:'bot', text:'Entendi! Pra eu te ajudar, qual o seu nome completo?'},
+      {who:'user', text:'Marcos Souza'},
+      {who:'bot', text:'Marcos, qual banco está o financiamento?'},
+      {who:'user', text:'Itaú'},
+      {who:'bot', text:'Perfeito, o Itaú está na nossa lista de bancos negociantes. O contrato está no seu nome?'},
+      {who:'user', text:'Sim, sou o titular.'},
+      {who:'bot', text:'Certo. E o contrato está em atraso ou já foi quitado?'},
+      {who:'user', text:'Em atraso, uns 3 meses.'},
+      {who:'bot', text:'Entendido. Qual unidade é mais próxima de você: Taguatinga, Sobradinho, Valparaíso, Goiânia ou Anápolis?'},
+      {who:'user', text:'Taguatinga'},
+      {who:'bot', text:'Show, Marcos! Já te encaixei na nossa qualificação. Tenho dois horários com a consultora Cristielly, unidade Taguatinga: amanhã às 10h ou às 15h. Qual prefere?'},
+      {who:'user', text:'Pode ser 10h.'},
+      {who:'bot', text:'Combinado! Agendamento confirmado para 10h com a consultora Cristielly. 🙌'},
+    ],
+    webhook:{ status:'qualificado', stage:2, card:{ title:'Marcos Souza — Itaú (45% desc.)', sub:'Titular · Em atraso · Unidade Taguatinga', extra:'Consultora: Cristielly · Agendado 10h' } }
+  },
+  { // Cenário 2: Fora de escopo - empréstimo pessoal CLT
+    name: "Empréstimo pessoal CLT",
+    messages: [
+      {who:'bot', text:'Olá! Aqui é a Lili, da Liberta Assessoria 😊 Você está com financiamento de veículo ou empréstimo com garantia de veículo em atraso?'},
+      {who:'user', text:'Não, é um empréstimo pessoal que peguei consignado, no meu CLT.'},
+      {who:'bot', text:'Entendo! No momento, a Liberta atua apenas com renegociação de financiamento veicular e empréstimo com garantia de veículo. Esse caso está fora do nosso escopo de atendimento. Agradecemos o contato! 🙏'},
+    ],
+    webhook:{ status:'fora_de_escopo', stage:3, card:{ title:'Lead — Empréstimo pessoal/CLT', sub:'Motivo: CreditoNovoOuPessoal', extra:'Sem ação do consultor — apenas histórico' } }
+  },
+  { // Cenário 3: Banco não atendido (BMG)
+    name: "Financiamento banco BMG",
+    messages: [
+      {who:'bot', text:'Olá! Aqui é a Lili, da Liberta Assessoria 😊 Você está com financiamento de veículo ou empréstimo com garantia de veículo em atraso?'},
+      {who:'user', text:'Sim, financiamento do meu carro, está em atraso.'},
+      {who:'bot', text:'Entendi! Qual o seu nome completo?'},
+      {who:'user', text:'Ana Paula Lima'},
+      {who:'bot', text:'Ana, qual banco está o financiamento?'},
+      {who:'user', text:'BMG'},
+      {who:'bot', text:'Ana, no momento o BMG não está entre as instituições que negociamos. Vou registrar seu contato para nosso histórico, mas infelizmente não conseguimos seguir com a renegociação por esse banco. Agradecemos o contato! 🙏'},
+    ],
+    webhook:{ status:'banco_nao_atendido', stage:3, card:{ title:'Ana Paula Lima — Banco BMG', sub:'Motivo: banco_nao_atendido', extra:'Registrado apenas para histórico' } }
+  }
+];
+
+let currentScenario = 0;
+let running = false;
+
+document.querySelectorAll('.sim-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    if(running) return;
+    document.querySelectorAll('.sim-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentScenario = parseInt(btn.dataset.scenario);
+    resetSim();
+  });
+});
+
+function resetSim(){
+  running = false;
+  document.getElementById('chat').innerHTML = '<p style="font-size:.85rem;color:var(--muted);padding:8px;">Cenário selecionado: <strong>'+scenarios[currentScenario].name+'</strong>. Clique em "Iniciar Simulação" para rodar a demonstração.</p>';
+  document.getElementById('apiStatus').textContent = 'Ocioso — aguardando dados conversacionais da Lili...';
+  document.getElementById('apiStatus').classList.remove('live');
+  document.getElementById('apiIcon').textContent = '⇄';
+  for(let i=0;i<4;i++){
+    document.getElementById('c'+i).textContent='0';
+    const col = document.getElementById('col'+i);
+    col.innerHTML = i===0 ? 'Nenhum card criado. Conclua o fluxo da Lili para gerar o card via webhook.' : '—';
+    col.className='empty';
+  }
+  document.getElementById('startSim').disabled = false;
+}
+
+document.getElementById('resetSim').addEventListener('click', resetSim);
+
+document.getElementById('startSim').addEventListener('click', async ()=>{
+  if(running) return;
+  running = true;
+  document.getElementById('startSim').disabled = true;
+  const chat = document.getElementById('chat');
+  chat.innerHTML = '';
+  const sc = scenarios[currentScenario];
+
+  for(const m of sc.messages){
+    await new Promise(r=>setTimeout(r, 650));
+    const div = document.createElement('div');
+    div.className = 'msg ' + m.who;
+    div.textContent = m.text;
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  // API integration
+  await new Promise(r=>setTimeout(r, 500));
+  document.getElementById('apiStatus').textContent = 'Enviando dados estruturados via webhook para o Bitrix24...';
+  document.getElementById('apiStatus').classList.add('live');
+  document.getElementById('apiIcon').textContent = '⟳';
+
+  await new Promise(r=>setTimeout(r, 1300));
+  document.getElementById('apiStatus').textContent = 'Card criado/atualizado com sucesso no pipeline.';
+  document.getElementById('apiIcon').textContent = '✓';
+
+  // Bitrix24 pipeline
+  const wh = sc.webhook;
+  document.getElementById('c0').textContent = '1';
+  const col0 = document.getElementById('col0');
+  col0.className='';
+  col0.innerHTML = '<div class="kcard"><b>'+wh.card.title+'</b>'+wh.card.sub+'</div>';
+
+  await new Promise(r=>setTimeout(r, 900));
+  document.getElementById('c'+wh.stage).textContent = '1';
+  const target = document.getElementById('col'+wh.stage);
+  target.className='';
+  target.innerHTML = '<div class="kcard"><b>'+wh.card.title+'</b>'+wh.card.sub+'<br><em>'+wh.card.extra+'</em></div>';
+  if(wh.stage!==0){
+    document.getElementById('c0').textContent='0';
+    col0.className='empty';
+    col0.innerHTML='Nenhum card criado. Conclua o fluxo da Lili para gerar o card via webhook.';
+  }
+
+  running = false;
+  document.getElementById('startSim').disabled = false;
+});
+</script>
+
+</body>
+</html>
