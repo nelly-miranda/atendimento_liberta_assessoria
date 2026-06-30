@@ -94,6 +94,7 @@ tr:nth-child(even) td{background:var(--accent-light);}
 .msg{max-width:88%;padding:8px 11px;border-radius:10px;font-size:.82rem;line-height:1.45;}
 .msg.bot{align-self:flex-start;background:var(--accent-light);color:var(--text);border-bottom-left-radius:2px;}
 .msg.user{align-self:flex-end;background:var(--accent);color:#fff;border-bottom-right-radius:2px;}
+.msg.system{align-self:center;background:#FFF3E0;color:#E65100;border:1px dashed #E65100;border-radius:6px;font-size:.75rem;font-style:italic;padding:5px 10px;max-width:96%;text-align:center;}
 .msg-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;opacity:.7;}
 /* INTEGRADOR */
 .api-body{padding:12px;min-height:380px;max-height:480px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;background:#F0F4FA;}
@@ -184,7 +185,7 @@ footer small{display:block;opacity:.75;margin-top:4px;}
 <!-- ===================== VISÃO GERAL ===================== -->
 <section id="visao" class="active">
   <h1 class="page-title">IA Conversacional e CRM Bitrix24</h1>
-  <p class="lead">A Traevo conduz a implantação de uma <strong>Inteligência Artificial Conversacional</strong> integrada diretamente ao <strong>Bitrix24 CRM</strong> da Liberta Assessoria Financeira. A IA recebe o nome de <strong>Lili</strong> e opera como assistente virtual no WhatsApp, qualificando leads de renegociação de financiamento veicular e empréstimo com garantia de veículo de forma totalmente automatizada. O motor LLM e a infraestrutura de IA são fornecidos pela <strong>EVA</strong>, parceira tecnológica do projeto. A arquitetura, integração com o Bitrix24, parametrização dos agentes e entrega completa são responsabilidade da <strong>Traevo</strong>.</p>
+  <p class="lead">A Traevo conduz a implantação de uma <strong>Inteligência Artificial Conversacional</strong> integrada diretamente ao <strong>Bitrix24 CRM</strong> da Liberta Assessoria Financeira. A IA recebe o nome de <strong>Lili</strong> e opera no WhatsApp qualificando leads para análise e negociação de financiamentos veiculares e empréstimos com garantia de veículo de forma totalmente automatizada. O motor LLM e a infraestrutura de IA são fornecidos pela <strong>EVA</strong>, parceira tecnológica do projeto. A arquitetura, integração com o Bitrix24, parametrização dos agentes e entrega completa são responsabilidade da <strong>Traevo</strong>.</p>
   <div class="badges">
     <span class="badge">WhatsApp Oficial + Números Humanizados</span>
     <span class="badge">Webhooks Bilaterais EVA e Bitrix24</span>
@@ -193,7 +194,7 @@ footer small{display:block;opacity:.75;margin-top:4px;}
     <span class="badge">Motor LLM: EVA</span>
   </div>
   <h2>Sobre a Liberta Assessoria Financeira</h2>
-  <p>A Liberta Assessoria é especializada em renegociação extrajudicial de financiamentos veiculares e empréstimos com garantia de veículo. Com mais de 18 anos de mercado, mais de 10.000 clientes ativos e marca registrada no INPI, a empresa possui um diferencial competitivo único: <strong>garante em contrato a redução de até 45% da dívida</strong>, assumindo o risco da negociação. Atua exclusivamente em Brasília (DF) e Goiás (GO), com cinco unidades físicas distribuídas nas regiões de Taguatinga, Sobradinho, Valparaíso, Goiânia e Anápolis.</p>
+  <p>A Liberta Assessoria é especializada em negociação extrajudicial de financiamentos veiculares e empréstimos com garantia de veículo. Com mais de 18 anos de mercado, mais de 10.000 clientes ativos e marca registrada no INPI, a empresa é uma <strong>negociadora que assume os riscos da operação</strong>: negocia diretamente com o banco e garante em contrato a quitação da dívida com desconto de até 45% — sem que o cliente precise negociar por conta própria. Atua exclusivamente em Brasília (DF) e Goiás (GO), com cinco unidades físicas distribuídas nas regiões de Taguatinga, Sobradinho, Valparaíso, Goiânia e Anápolis.</p>
   <div class="cards">
     <div class="card">
       <h3>Agente 01: Qualificação (Lili)</h3>
@@ -292,6 +293,26 @@ footer small{display:block;opacity:.75;margin-top:4px;}
       <button class="sim-btn" data-scenario="3">
         <strong>Cenário 4: Hard Stop fora de DF/GO</strong>
         <span>Financiamento Santander, veículo em São Paulo. Encerramento na validação de região.</span>
+      </button>
+      <button class="sim-btn" data-scenario="4">
+        <strong>Cenário 5: Dois bancos negociantes</strong>
+        <span>Cliente com Itaú e Santander, ambos em atraso. Qualificação completa com registro dos dois financiamentos.</span>
+      </button>
+      <button class="sim-btn" data-scenario="5">
+        <strong>Cenário 6: Um negociante + um não negociante</strong>
+        <span>Cliente com Itaú e BMG. Qualifica pelo Itaú, BMG registrado como comentário no lead.</span>
+      </button>
+      <button class="sim-btn" data-scenario="6">
+        <strong>Cenário 7: Dois bancos não negociantes</strong>
+        <span>Cliente com BMG e Safra. Hard stop para os dois em uma única resposta.</span>
+      </button>
+      <button class="sim-btn" data-scenario="7">
+        <strong>Cenário 8: Conteúdo impróprio</strong>
+        <span>Cliente envia foto inapropriada durante o atendimento. Lili repreende e encerra sem continuar o fluxo.</span>
+      </button>
+      <button class="sim-btn" data-scenario="8">
+        <strong>Cenário 9: Lista de transmissão (spam)</strong>
+        <span>Número adicionado em lista de bom-dia. Lili identifica, não responde e marca como spam no Bitrix24.</span>
       </button>
     </div>
     <div class="sim-grid">
@@ -413,11 +434,11 @@ footer small{display:block;opacity:.75;margin-top:4px;}
         <p><strong>Responsabilidade:</strong> Receber o lead via WhatsApp, conduzir o fluxo completo de qualificação, validar escopo, banco e região, propor agendamento e realizar o handoff para o consultor da unidade no Bitrix24. A Lili apenas qualifica e encaminha. Ela não negocia, não calcula e não orienta juridicamente.</p>
         <div class="note ok"><strong>Status do agente:</strong> Fluxo finalizado. Pronto para parametrização no motor EVA.</div>
         <h2>1. Persona, identidade e tom de voz</h2>
-        <p>A IA se chama <strong>Lili</strong> e se apresenta como assistente virtual da Liberta Assessoria. Ela jamais finge ser uma atendente humana. Quando perguntada, confirma que é uma assistente virtual e continua o atendimento normalmente.</p>
+        <p>A IA se chama <strong>Lili</strong> e se apresenta como parte da equipe da Liberta Assessoria. <strong>A Lili não menciona o termo "assistente virtual" na abertura</strong>, pois clientes com bloqueio a IAs tendem a encerrar o atendimento ao ouvir isso. A apresentação natural cria vínculo imediato. Se o cliente perguntar diretamente se é uma IA, robô ou assistente virtual, a Lili confirma de forma simples e direta e continua o atendimento sem interromper o fluxo. Ela jamais nega ser uma IA quando perguntada.</p>
         <p>O tom de voz deve ser <strong>acolhedor, direto e empático</strong>. Sem termos jurídicos complexos, sem formalidades excessivas e sem travessão. A linguagem é simples, como em uma conversa real pelo WhatsApp. A Lili não usa abreviações informais de internet como "vc", "tb", "pq". Todas as mensagens seguem a norma culta padrão, mas com leveza e proximidade.</p>
         <p>O discurso deve estar alinhado ao posicionamento institucional da Liberta: garantia contratual de até 45% de desconto, processo 100% extrajudicial e atuação no Distrito Federal e em Goiás.</p>
         <h3>Exemplo de mensagem de abertura (para copiar e adaptar na EVA)</h3>
-        <div class="note">Entendo que a situação de financiamento veicular pode ser complexa, especialmente quando se trata de valores altos e juros. A gente realiza uma análise do financiamento veicular para verificar a possibilidade de redução das parcelas, podendo chegar a até 45%, dependendo do caso. Para que eu possa continuar, como posso te chamar?</div>
+        <div class="note">Olá! Aqui é a Lili e faço parte da Liberta Assessoria. Entendo que a situação de financiamento veicular pode ser bem complexa, especialmente quando se trata de valores altos e juros. Realizamos uma análise para verificar a possibilidade de redução das parcelas, podendo chegar a até 45%. Para continuar, como posso te chamar?</div>
         <h2>2. Fluxo de qualificação completo</h2>
         <p>O fluxo segue obrigatoriamente esta sequência: <strong>E1 Saudação e nome / E2 Problema principal / E3 Banco / E4 Titularidade / E5 Status do contrato / E6 Região de atuação / E7 Unidade / E8 Qualificação e agendamento.</strong></p>
         <p>A Lili nunca pula etapas, nunca repete perguntas já respondidas e nunca faz duas perguntas na mesma mensagem.</p>
@@ -456,6 +477,8 @@ footer small{display:block;opacity:.75;margin-top:4px;}
         <p><strong>Destino no Bitrix24:</strong> campo "Banco" e campo "Motivo de descarte"</p>
         <p><strong>Pergunta padrão:</strong> Para saber se conseguimos te ajudar, por qual banco voce fez o financiamento?</p>
         <p><strong>Regra de prioridade positiva:</strong> bancos da lista de negociantes SEMPRE vencem em caso de conflito de regras. Nunca sao marcados como nao atendidos.</p>
+        <p><strong>Mensagem de confirmacao para banco negociante (para copiar na EVA):</strong></p>
+        <div class="note">Maravilha! O Banco [nome] é um banco negociante e garantimos em contrato o desconto de até 45%. O contrato está no seu nome ou você possui procuração?</div>
         <p><strong>Bancos negociantes (avancam para E4):</strong> Itau, Santander, Bradesco, BV Financeira, Panamericano, Fiat, RCI/Renault, GMAC/Chevrolet, Credifibra, Nissan, Hyundai, PSA/Stellantis, Banco Finasa.</p>
         <p><strong>Bancos nao atendidos (hard stop, motivo "banco_nao_atendido"):</strong> BMG, Safra, Volkswagen, C6 Bank, Caixa Economica Federal, Nubank, Banco do Brasil, Daycoval, Honda, Toyota, Yamaha, OMNI, Creditas, Mercado Pago, Banco Inter, Agibank, Sicredi, Sicoob, Mercantil do Brasil.</p>
         <p><strong>Resposta de encerramento por banco nao atendido (para copiar na EVA):</strong></p>
@@ -479,10 +502,11 @@ footer small{display:block;opacity:.75;margin-top:4px;}
         <p><strong>Variável gerada:</strong> {StatusPagamento}</p>
         <p><strong>Destino no Bitrix24:</strong> campo "Status do contrato", orienta urgencia e abordagem do consultor</p>
         <p><strong>Pergunta padrão:</strong> As parcelas estao em dia, em atraso ou o contrato ja foi quitado?</p>
+        <p><strong>Regra anti-loop (importante):</strong> se o cliente ja informou o status anteriormente na conversa (ex: mencionou "em atraso" durante E2), a Lili NAO repete a pergunta de E5. Em vez disso, registra o status ja conhecido e pergunta informacoes adicionais: "Ha quanto tempo as parcelas estao em atraso?" Se o status for "em dia" ja informado, pula direto para E6.</p>
         <p><strong>Caminhos:</strong></p>
         <ul class="clean">
           <li>Em dia: salvar {StatusPagamento=SIM}, avancar para E6.</li>
-          <li>Em atraso: salvar {StatusPagamento=NAO}, avancar para E6.</li>
+          <li>Em atraso: salvar {StatusPagamento=NAO}, avancar para E6. Se ja informado antes, perguntar "Ha quanto tempo as parcelas estao em atraso?" para registro adicional.</li>
           <li>Quitado: hard stop. Motivo: "Quitado". A Liberta nao atende contratos ja quitados.</li>
         </ul>
         <p><strong>Resposta de encerramento por contrato quitado (para copiar na EVA):</strong></p>
@@ -504,7 +528,8 @@ footer small{display:block;opacity:.75;margin-top:4px;}
         <p><strong>Objetivo:</strong> Capturar a unidade de preferencia do cliente. A distribuicao ao consultor especifico dentro da unidade e feita pelo Bitrix24 (alternância automática, que pula ausentes automaticamente). A Lili nao controla quem vai atender, apenas entrega a unidade ao CRM.</p>
         <p><strong>Variável gerada:</strong> {Unidade}</p>
         <p><strong>Destino no Bitrix24:</strong> campo "Unidade", dispara a regra de distribuicao automatica</p>
-        <p><strong>Pergunta padrão:</strong> Para encaminhar seu atendimento, qual unidade fica melhor para voce: Taguatinga, Sobradinho, Valparaiso, Goiania ou Anapolis?</p>
+        <p><strong>Pergunta padrão</strong> (com lista de opcoes — excecao permitida ao firewall de listas):</p>
+        <div class="note">Para que eu possa te encaminhar para um de nossos consultores, por qual unidade gostaria de ser atendido?<br>- Taguatinga<br>- Sobradinho<br>- Valparaíso<br>- Anápolis<br>- Goiânia</div>
         <p><strong>Regras:</strong></p>
         <ul class="clean">
           <li>Qualquer unidade escolhida: salvar {Unidade}, avancar para E8.</li>
@@ -526,6 +551,8 @@ footer small{display:block;opacity:.75;margin-top:4px;}
         <p><strong>Modalidade de atendimento (presencial ou online):</strong> a Lili sempre prioriza o atendimento presencial na unidade escolhida. Porem, se o cliente mencionar que mora distante ou no interior — o que ocorre com frequencia em Goias — a Lili informa que o consultor tambem atende de forma online, sem nenhum problema. Exemplo: "Sem problemas! Nosso consultor tambem realiza atendimento online, entao podemos encaminhar da mesma forma e ele entra em contato por aqui ou por videoconferencia, da forma que for melhor para voce."</p>
         <p><strong>Mensagem de handoff (para copiar e adaptar na EVA):</strong></p>
         <div class="note">Perfeito! Ja te encaminhei para a consultora [Nome], da unidade de [Unidade], que vai dar continuidade a sua analise gratuita e te explicar tudo com calma e transparencia. Tenho dois horarios disponiveis para amanha: [horario 1] ou [horario 2]. Qual fica melhor pra voce? Seja muito bem-vindo a Liberta Assessoria!</div>
+        <p><strong>Mensagem de confirmacao apos escolha do horario (para copiar na EVA):</strong></p>
+        <div class="note">Combinado! Agendamento confirmado para amanha as [horario] com a nossa consultora [Nome], da unidade de [Unidade], que dara sequencia a sua analise gratuita e te explicara todo o funcionamento com calma e transparencia. Fique a vontade para tirar todas as suas duvidas. Seja muito bem-vindo a Liberta Assessoria!</div>
         <p><strong>Resposta pos-encerramento</strong> (qualquer mensagem enviada apos o handoff):</p>
         <div class="note">Seu atendimento ja foi encaminhado. Em breve a equipe responsavel dara continuidade por aqui.</div>
         <h2>3. Hard stops mapeados: resumo completo</h2>
@@ -542,18 +569,21 @@ footer small{display:block;opacity:.75;margin-top:4px;}
           <tr><td>Banco fora da lista negociante</td><td>E3</td><td>banco_nao_atendido (com nome do banco)</td></tr>
           <tr><td>Contrato ja quitado</td><td>E5</td><td>Quitado</td></tr>
           <tr><td>Financiamento e veiculo ambos fora de DF e GO</td><td>E6</td><td>ForaDeAreaDeAtuacao</td></tr>
+          <tr><td>Envio de conteudo impróprio (nudez, pornografia, criancas, animais)</td><td>Qualquer etapa</td><td>ConteudoImproprio</td></tr>
         </table>
         <h2>4. Firewalls de comportamento: anti-robotizacao</h2>
         <p>Os firewalls sao regras de comportamento que impedem a Lili de sair do fluxo de qualificacao. Devem ser configurados no motor EVA como restricoes globais, ativas em todas as etapas.</p>
         <ul class="clean">
           <li><strong>Anti-loop:</strong> nao repetir perguntas cujas respostas ja estao na conversa. Se o cliente ja informou nome, banco, titularidade, status ou unidade, a Lili nao pergunta de novo.</li>
           <li><strong>Sem orientacao externa:</strong> a Lili nao indica banco, advogado, Justica, Procon, nem explica taxas, CET, juros ou qualquer calculo. Ela apenas qualifica e encaminha.</li>
-          <li><strong>Sem listas ou perguntas duplas:</strong> cada mensagem da Lili contem exatamente uma pergunta. Sem listas numeradas, sem bullet points, sem multiplas questoes na mesma mensagem.</li>
+          <li><strong>Sem perguntas duplas:</strong> cada mensagem da Lili contem exatamente uma pergunta. Excecao permitida: na etapa E7, as opcoes de unidade podem ser apresentadas em lista com bullets para facilitar a escolha do cliente. Fora de E7, sem listas numeradas, sem bullet points e sem multiplas questoes na mesma mensagem.</li>
           <li><strong>Pos-encerramento blindado:</strong> apos {atendimento_encerrado=true}, qualquer nova mensagem recebe apenas a resposta padrao de encaminhamento. O fluxo nao reabre.</li>
           <li><strong>Horario de funcionamento:</strong> a Lili pode receber e responder mensagens a qualquer hora do dia ou da noite, sem restricao. Para atendimento humano (atendentes), o horario e de segunda a sexta das 9h as 18h. Para agendamento com consultor, o horario disponivel e de segunda a sexta das 9h as 17h. Fora do horario de atendimento humano, a Lili registra o contato e informa que a equipe retornara no proximo dia util dentro do horario comercial.</li>
           <li><strong>Pedido de atendente humano:</strong> em qualquer etapa, se o cliente pedir para falar com uma pessoa, a Lili confirma o encaminhamento, coleta o dado da etapa atual e sinaliza o card para a atendente responsavel.</li>
           <li><strong>Acessibilidade:</strong> se o cliente informar que nao sabe ler ou escrever, a Lili transfere imediatamente sem seguir o fluxo.</li>
           <li><strong>Conteudo paralelo:</strong> audios, musicas, assuntos emocionais ou paralelos nao sao respondidos no conteudo. A Lili redireciona para a proxima pergunta do fluxo.</li>
+          <li><strong>Conteudo improprio — encerramento com repreensao:</strong> se o cliente enviar qualquer imagem ou video de nudez, conteudo pornografico, declaracoes de amor ou mensagens de cunho romantico, imagens de animais sendo machucados, ou qualquer imagem envolvendo criancas em contexto inadequado, a Lili responde de forma firme e encerra o atendimento imediatamente. Registrar no Bitrix24 com motivo "ConteudoImproprio" e marcar para revisao humana. Este hard stop e ativado independente da etapa e antes de qualquer outra logica de fluxo. <strong>Mensagem de repreensao (para copiar na EVA):</strong> "Este canal e exclusivo para atendimento de clientes da Liberta Assessoria Financeira. O envio deste tipo de conteudo nao e permitido e nao sera tolerado. O seu atendimento foi encerrado."</li>
+          <li><strong>Lista de transmissao (spam de bom-dia):</strong> quando o sistema identificar mensagens identicas ou muito semelhantes enviadas fora do contexto de qualificacao — como imagens animadas de "bom dia", "boa tarde" ou saudacoes em sequencia sem conteudo relacionado ao servico — a Lili nao responde nem abre novo fluxo de qualificacao. O lead deve ser marcado como "Spam" no Bitrix24. Como o bloqueio no sistema pode nao ser suficiente para impedir novas mensagens do mesmo numero, o procedimento e: (1) ignorar a mensagem sem resposta; (2) registrar o evento no historico do lead; (3) acionar revisao manual para que a equipe avalie o bloqueio permanente na plataforma WhatsApp.</li>
         </ul>
         <h2>5. Escalacao para humano: quando e como</h2>
         <p>Quando a escalacao e necessaria, o card e encaminhado para as <strong>atendentes</strong> (Debora, Wendy ou Maria), que recebem os leads via distribuicao round-robin automatica pelo Bitrix24, independente de unidade. Para consultor, somente apos qualificacao completa e agendamento.</p>
@@ -567,6 +597,8 @@ footer small{display:block;opacity:.75;margin-top:4px;}
           <tr><td>Pedido de falar com humano</td><td><span class="tag no">Nao</span></td><td>Escala imediata para <strong>ATENDENTE</strong> com notificacao no Bitrix24</td></tr>
           <tr><td>Fora do horario de atendimento humano</td><td><span class="tag ok">Sim</span> (registra)</td><td>Follow-up automatico no proximo dia util</td></tr>
           <tr><td>Conversa emocional ou assunto paralelo persistente</td><td><span class="tag no">Nao</span></td><td>Escala para <strong>ATENDENTE</strong> avaliar</td></tr>
+          <tr><td>Envio de conteudo improprio (nudez, pornografia, criancas, animais)</td><td><span class="tag ok">Sim</span> (repreende e encerra)</td><td>Lili envia mensagem de repreensao, encerra o atendimento e registra card como "ConteudoImproprio" para revisao humana</td></tr>
+          <tr><td>Lista de transmissao / spam de bom-dia</td><td><span class="tag ok">Sim</span> (ignora)</td><td>Lead marcado como "Spam" no Bitrix24; revisao manual para bloqueio permanente na plataforma</td></tr>
         </table>
         <div class="note warn"><strong>Atendentes responsaveis pelo recebimento de escalacoes:</strong> Debora, Wendy e Maria. A distribuicao e feita via <strong>round-robin automatico pelo Bitrix24</strong>, sem setorizacao por unidade — as tres recebem cards de qualquer unidade conforme a vez. O consultor atende apenas leads ja qualificados e agendados pela Lili.</div>
         <h2>6. Múltiplos financiamentos</h2>
@@ -657,33 +689,33 @@ var scenarios = [
   {
     name: "Qualificação completa — Itaú · Taguatinga",
     messages: [
-      {who:'bot', text:'Olá! Aqui é a Lili, assistente virtual da Liberta Assessoria. Entendo que a situação de financiamento veicular pode ser bem complexa, especialmente com juros altos. A gente faz uma análise para verificar a possibilidade de redução das parcelas, podendo chegar a até 45%. Para continuar, como posso te chamar?'},
+      {who:'bot', text:'Olá! Aqui é a Lili e faço parte da Liberta Assessoria. Entendo que a situação de financiamento veicular pode ser bem complexa, especialmente com juros altos. Realizamos uma análise para verificar a possibilidade de redução das parcelas, podendo chegar a até 45%. Para continuar, como posso te chamar?'},
       {who:'user', text:'Marcos'},
       {who:'bot', text:'Oi, Marcos! Me conta rapidinho, você quer ajuda com financiamento veicular ou empréstimo com garantia de veículo?'},
       {who:'user', text:'Tenho um financiamento de carro que está em atraso.'},
-      {who:'bot', text:'Entendido! Para saber se conseguimos te ajudar, por qual banco você fez o financiamento?'},
+      {who:'bot', text:'Para saber se conseguimos te ajudar, por qual banco você fez o financiamento?'},
       {who:'user', text:'Itaú'},
-      {who:'bot', text:'O Itaú está na nossa lista de bancos que trabalhamos! O contrato está no seu nome ou você tem procuração?'},
+      {who:'bot', text:'Maravilha! O Banco Itaú é um banco negociante e garantimos em contrato o desconto de até 45%. O contrato está no seu nome ou você possui procuração?'},
       {who:'user', text:'Está no meu nome, sim.'},
-      {who:'bot', text:'Perfeito. As parcelas estão em dia, em atraso ou o contrato já foi quitado?'},
-      {who:'user', text:'Em atraso, uns 3 meses já.'},
+      {who:'bot', text:'Entendido. Há quanto tempo as parcelas estão em atraso?'},
+      {who:'user', text:'Uns 3 meses já.'},
       {who:'bot', text:'Entendi. Só para confirmar: o financiamento foi feito aqui no DF ou em Goiás, ou o veículo está aqui na região?'},
       {who:'user', text:'Sim, moro em Taguatinga mesmo.'},
-      {who:'bot', text:'Para encaminhar seu atendimento, qual unidade fica melhor: Taguatinga, Sobradinho, Valparaíso, Goiânia ou Anápolis?'},
+      {who:'bot', text:'Para que eu possa te encaminhar para um de nossos consultores, por qual unidade gostaria de ser atendido?\n- Taguatinga\n- Sobradinho\n- Valparaíso\n- Anápolis\n- Goiânia'},
       {who:'user', text:'Taguatinga fica ótimo.'},
       {who:'bot', text:'Perfeito, Marcos! Já te encaminhei para a consultora Cristielly, da unidade de Taguatinga. Tenho dois horários para amanhã: 10h ou 14h. Qual fica melhor?'},
       {who:'user', text:'10h está ótimo!'},
-      {who:'bot', text:'Combinado! Agendamento confirmado para amanhã às 10h com a consultora Cristielly, unidade Taguatinga. Seja muito bem-vindo à Liberta Assessoria! Em breve ela entrará em contato por aqui.'}
+      {who:'bot', text:'Combinado! Agendamento confirmado para amanhã às 10h com a nossa consultora Cristielly, da unidade de Taguatinga, que dará sequência à sua análise gratuita e te explicará todo o funcionamento com calma e transparência. Fique à vontade para tirar todas as suas dúvidas. Seja muito bem-vindo à Liberta Assessoria!'}
     ],
     apiEvents: [
       {t:1,  type:'aet-webhook', label:'WEBHOOK DISPARADO',    msg:'POST /crm/lead/create',         payload:'{ "source": "whatsapp", "agent": "qualificacao", "status": "em_qualificacao" }'},
       {t:2,  type:'aet-field',   label:'CAMPO ATUALIZADO',     msg:'PrimeiroNome capturado',         payload:'{ "PrimeiroNome": "Marcos" }'},
       {t:4,  type:'aet-field',   label:'CAMPO ATUALIZADO',     msg:'ProblemaPrincipal capturado',    payload:'{ "ProblemaPrincipal": "FinanciamentoVeicular" }'},
+      {t:4,  type:'aet-field',   label:'CAMPO ATUALIZADO',     msg:'StatusPagamento capturado (contexto E2)', payload:'{ "StatusPagamento": "ATRASADO" }'},
       {t:5,  type:'aet-field',   label:'CAMPO ATUALIZADO',     msg:'Banco capturado',                payload:'{ "Banco": "Itaú" }'},
       {t:5,  type:'aet-webhook', label:'VALIDAÇÃO BANCO',       msg:'GET /bancos/negociantes → Itaú OK', payload:'{ "banco": "Itaú", "negociante": true, "prioridade_positiva": true }'},
       {t:6,  type:'aet-field',   label:'CAMPO ATUALIZADO',     msg:'Titularidade capturada',         payload:'{ "Titularidade": "SIM" }'},
       {t:7,  type:'aet-webhook', label:'WEBHOOK DISPARADO',    msg:'POST /crm/lead/update → Em Qualificação', payload:'{ "stage": "Em_Qualificacao" }'},
-      {t:8,  type:'aet-field',   label:'CAMPO ATUALIZADO',     msg:'StatusPagamento capturado',      payload:'{ "StatusPagamento": "ATRASADO" }'},
       {t:10, type:'aet-field',   label:'CAMPO ATUALIZADO',     msg:'RegiaoAtuacao confirmada',       payload:'{ "RegiaoAtuacao": "DF - Taguatinga", "elegivel": true }'},
       {t:12, type:'aet-field',   label:'CAMPO ATUALIZADO',     msg:'Unidade selecionada',            payload:'{ "Unidade": "Taguatinga" }'},
       {t:12, type:'aet-webhook', label:'WEBHOOK DISPARADO',    msg:'POST /crm/lead/update → Qualificado', payload:'{ "stage": "Qualificado_Agendado", "unidade": "Taguatinga", "distribuicao": "alternancia_automatica" }'},
@@ -694,9 +726,9 @@ var scenarios = [
     fieldUpdates: [
       {t:2,  field:'PrimeiroNome',        val:'Marcos'},
       {t:4,  field:'ProblemaPrincipal',   val:'FinanciamentoVeicular'},
+      {t:4,  field:'StatusPagamento',     val:'ATRASADO'},
       {t:5,  field:'Banco',              val:'Itaú'},
       {t:6,  field:'Titularidade',        val:'SIM'},
-      {t:8,  field:'StatusPagamento',     val:'ATRASADO'},
       {t:10, field:'RegiaoAtuacao',       val:'DF — Taguatinga'},
       {t:12, field:'Unidade',            val:'Taguatinga'},
       {t:16, field:'qualificacao_concluida', val:'true'},
@@ -713,7 +745,7 @@ var scenarios = [
   {
     name: "Hard Stop — Empréstimo pessoal CLT",
     messages: [
-      {who:'bot', text:'Olá! Aqui é a Lili, assistente virtual da Liberta Assessoria. Como posso te chamar?'},
+      {who:'bot', text:'Olá! Aqui é a Lili e faço parte da Liberta Assessoria. Como posso te chamar?'},
       {who:'user', text:'Ana'},
       {who:'bot', text:'Oi, Ana! Me conta: você quer ajuda com financiamento veicular ou empréstimo com garantia de veículo?'},
       {who:'user', text:'Na verdade é um empréstimo pessoal consignado no meu CLT.'},
@@ -738,7 +770,7 @@ var scenarios = [
   {
     name: "Hard Stop — Banco BMG não atendido",
     messages: [
-      {who:'bot', text:'Olá! Aqui é a Lili, assistente virtual da Liberta Assessoria. Como posso te chamar?'},
+      {who:'bot', text:'Olá! Aqui é a Lili e faço parte da Liberta Assessoria. Como posso te chamar?'},
       {who:'user', text:'Roberto'},
       {who:'bot', text:'Oi, Roberto! Você quer ajuda com financiamento veicular ou empréstimo com garantia de veículo?'},
       {who:'user', text:'Sim, tenho um financiamento de carro em atraso.'},
@@ -770,7 +802,7 @@ var scenarios = [
   {
     name: "Hard Stop — Veículo fora de DF/GO (São Paulo)",
     messages: [
-      {who:'bot', text:'Olá! Aqui é a Lili, assistente virtual da Liberta Assessoria. Como posso te chamar?'},
+      {who:'bot', text:'Olá! Aqui é a Lili e faço parte da Liberta Assessoria. Como posso te chamar?'},
       {who:'user', text:'Fernanda'},
       {who:'bot', text:'Oi, Fernanda! Você quer ajuda com financiamento veicular ou empréstimo com garantia de veículo?'},
       {who:'user', text:'Tenho um financiamento de carro no Santander, está em atraso.'},
@@ -809,6 +841,191 @@ var scenarios = [
       {t:4,  stage:1, card:{title:'Fernanda — Em qualificação',    tags:['em_qualificacao','santander'],       cls:'highlight'}},
       {t:10, stage:3, card:{title:'Fernanda — Santander · SP',     tags:['ForaDeAreaDeAtuacao','encerrado'],   cls:'highlight'}}
     ]
+  },
+  {
+    name: "Múltiplos financiamentos — 2 bancos negociantes (Itaú + Santander)",
+    messages: [
+      {who:'bot', text:'Olá! Aqui é a Lili e faço parte da Liberta Assessoria. Realizamos uma análise para verificar a possibilidade de redução das parcelas, podendo chegar a até 45%. Para continuar, como posso te chamar?'},
+      {who:'user', text:'Patrícia'},
+      {who:'bot', text:'Oi, Patrícia! Você quer ajuda com financiamento veicular ou empréstimo com garantia de veículo?'},
+      {who:'user', text:'Tenho dois financiamentos de carro, um no Itaú e outro no Santander. Os dois estão em atraso.'},
+      {who:'bot', text:'Ótima notícia! Tanto o Itaú quanto o Santander são bancos negociantes e garantimos em contrato o desconto de até 45%. Vou registrar os dois financiamentos. O contrato está no seu nome ou você possui procuração?'},
+      {who:'user', text:'Os dois estão no meu nome.'},
+      {who:'bot', text:'Perfeito! Só para confirmar: os financiamentos foram feitos no DF ou em Goiás, ou os veículos estão aqui na região?'},
+      {who:'user', text:'Sim, moro em Goiânia.'},
+      {who:'bot', text:'Para que eu possa te encaminhar para um de nossos consultores, por qual unidade gostaria de ser atendida?\n- Taguatinga\n- Sobradinho\n- Valparaíso\n- Anápolis\n- Goiânia'},
+      {who:'user', text:'Goiânia, por favor.'},
+      {who:'bot', text:'Perfeito, Patrícia! Já te encaminhei para a consultora Eduarda, da unidade de Goiânia. Tenho dois horários para amanhã: 11h ou 14h. Qual fica melhor?'},
+      {who:'user', text:'14h está ótimo!'},
+      {who:'bot', text:'Combinado! Agendamento confirmado para amanhã às 14h com a nossa consultora Eduarda, da unidade de Goiânia, que dará sequência à análise gratuita dos dois financiamentos e te explicará todo o funcionamento com calma e transparência. Seja muito bem-vinda à Liberta Assessoria!'}
+    ],
+    apiEvents: [
+      {t:1,  type:'aet-webhook', label:'WEBHOOK DISPARADO',    msg:'POST /crm/lead/create',              payload:'{ "source": "whatsapp", "agent": "qualificacao", "status": "em_qualificacao" }'},
+      {t:2,  type:'aet-field',   label:'CAMPO ATUALIZADO',     msg:'PrimeiroNome capturado',              payload:'{ "PrimeiroNome": "Patricia" }'},
+      {t:4,  type:'aet-field',   label:'CAMPO ATUALIZADO',     msg:'ProblemaPrincipal capturado',         payload:'{ "ProblemaPrincipal": "FinanciamentoVeicular" }'},
+      {t:4,  type:'aet-field',   label:'CAMPO ATUALIZADO',     msg:'StatusPagamento capturado (contexto E2)', payload:'{ "StatusPagamento": "ATRASADO" }'},
+      {t:4,  type:'aet-field',   label:'MÚLTIPLOS BANCOS',     msg:'Bancos capturados — 2 negociantes',   payload:'{ "Banco": ["Itaú","Santander"], "negociantes": [true,true] }'},
+      {t:4,  type:'aet-webhook', label:'VALIDAÇÃO BANCOS',     msg:'GET /bancos/negociantes → Itaú OK, Santander OK', payload:'{ "itau": true, "santander": true }'},
+      {t:5,  type:'aet-field',   label:'CAMPO ATUALIZADO',     msg:'Titularidade capturada — ambos',      payload:'{ "Titularidade": "SIM", "financiamentos": 2 }'},
+      {t:6,  type:'aet-webhook', label:'WEBHOOK DISPARADO',    msg:'POST /crm/lead/update → Em Qualificação', payload:'{ "stage": "Em_Qualificacao" }'},
+      {t:8,  type:'aet-field',   label:'CAMPO ATUALIZADO',     msg:'RegiaoAtuacao confirmada — Goiânia',  payload:'{ "RegiaoAtuacao": "GO - Goiânia", "elegivel": true }'},
+      {t:10, type:'aet-field',   label:'CAMPO ATUALIZADO',     msg:'Unidade selecionada',                 payload:'{ "Unidade": "Goiânia" }'},
+      {t:10, type:'aet-webhook', label:'WEBHOOK DISPARADO',    msg:'POST /crm/lead/update → Qualificado', payload:'{ "stage": "Qualificado_Agendado", "unidade": "Goiânia", "distribuicao": "alternancia_automatica" }'},
+      {t:10, type:'aet-response',label:'RETORNO BITRIX24',     msg:'Consultor atribuído via alternância automática', payload:'{ "consultor": "Eduarda", "unidade": "Goiânia", "horarios": ["11:00","14:00"] }'},
+      {t:12, type:'aet-field',   label:'CAMPO ATUALIZADO',     msg:'Horário agendado confirmado',         payload:'{ "horario_agendado": "amanha 14:00", "qualificacao_concluida": true }'},
+      {t:13, type:'aet-ok',      label:'QUALIFICACAO CONCLUIDA', msg:'Card finalizado — handoff realizado', payload:'{ "qualificacao_concluida": true, "atendimento_encerrado": true, "card_id": "LIB-3051" }'}
+    ],
+    fieldUpdates: [
+      {t:2,  field:'PrimeiroNome',          val:'Patrícia'},
+      {t:4,  field:'ProblemaPrincipal',     val:'FinanciamentoVeicular'},
+      {t:4,  field:'StatusPagamento',       val:'ATRASADO'},
+      {t:4,  field:'Banco',                val:'Itaú + Santander'},
+      {t:5,  field:'Titularidade',          val:'SIM (ambos)'},
+      {t:8,  field:'RegiaoAtuacao',         val:'GO — Goiânia'},
+      {t:10, field:'Unidade',              val:'Goiânia'},
+      {t:12, field:'qualificacao_concluida', val:'true'},
+      {t:12, field:'horario_agendado',      val:'amanhã 14:00'},
+      {t:13, field:'atendimento_encerrado', val:'true'}
+    ],
+    bitrix: [
+      {t:1,  stage:0, card:{title:'Novo lead — WhatsApp',             tags:['whatsapp','novo'],                            cls:''}},
+      {t:4,  stage:1, card:{title:'Patrícia — Em qualificação',       tags:['em_qualificacao','itau','santander'],          cls:'highlight'}},
+      {t:10, stage:2, card:{title:'Patrícia — Itaú+Santander · ATRASADO', tags:['qualificado','goiania','agendado_14h'],    cls:'success'},
+             consultor:{nome:'Eduarda', unidade:'Goiânia', agenda:'amanhã 14:00', contato:'Bitrix24 Contact Center', card:'LIB-3051'}}
+    ]
+  },
+  {
+    name: "Múltiplos financiamentos — 1 banco negociante (Itaú) + 1 não negociante (BMG)",
+    messages: [
+      {who:'bot', text:'Olá! Aqui é a Lili e faço parte da Liberta Assessoria. Realizamos uma análise para verificar a possibilidade de redução das parcelas, podendo chegar a até 45%. Para continuar, como posso te chamar?'},
+      {who:'user', text:'Lucas'},
+      {who:'bot', text:'Oi, Lucas! Você quer ajuda com financiamento veicular ou empréstimo com garantia de veículo?'},
+      {who:'user', text:'Tenho dois financiamentos, um no Itaú e outro no BMG. Os dois estão atrasados.'},
+      {who:'bot', text:'Ótimo! O Itaú é um banco negociante e garantimos em contrato o desconto de até 45%. Já o BMG é um banco mais restritivo e não aceita o formato de negociação que realizamos aqui na Liberta — mas vou registrar essa informação e prosseguir com a análise do seu Itaú. O contrato do Itaú está no seu nome ou você possui procuração?'},
+      {who:'user', text:'Está no meu nome.'},
+      {who:'bot', text:'Perfeito! Só para confirmar: o financiamento do Itaú foi feito no DF ou em Goiás, ou o veículo está aqui na região?'},
+      {who:'user', text:'Sim, moro em Taguatinga.'},
+      {who:'bot', text:'Para que eu possa te encaminhar para um de nossos consultores, por qual unidade gostaria de ser atendido?\n- Taguatinga\n- Sobradinho\n- Valparaíso\n- Anápolis\n- Goiânia'},
+      {who:'user', text:'Taguatinga.'},
+      {who:'bot', text:'Perfeito, Lucas! Já te encaminhei para a consultora Juliana, da unidade de Taguatinga. Tenho dois horários para amanhã: 9h ou 13h. Qual fica melhor?'},
+      {who:'user', text:'13h está ótimo!'},
+      {who:'bot', text:'Combinado! Agendamento confirmado para amanhã às 13h com a nossa consultora Juliana, da unidade de Taguatinga, que dará sequência à análise gratuita do seu Itaú e te explicará todo o funcionamento com calma e transparência. Seja muito bem-vindo à Liberta Assessoria!'}
+    ],
+    apiEvents: [
+      {t:1,  type:'aet-webhook', label:'WEBHOOK DISPARADO',    msg:'POST /crm/lead/create',              payload:'{ "source": "whatsapp", "agent": "qualificacao", "status": "em_qualificacao" }'},
+      {t:2,  type:'aet-field',   label:'CAMPO ATUALIZADO',     msg:'PrimeiroNome capturado',              payload:'{ "PrimeiroNome": "Lucas" }'},
+      {t:4,  type:'aet-field',   label:'CAMPO ATUALIZADO',     msg:'ProblemaPrincipal capturado',         payload:'{ "ProblemaPrincipal": "FinanciamentoVeicular" }'},
+      {t:4,  type:'aet-field',   label:'CAMPO ATUALIZADO',     msg:'StatusPagamento capturado (contexto E2)', payload:'{ "StatusPagamento": "ATRASADO" }'},
+      {t:4,  type:'aet-field',   label:'BANCOS IDENTIFICADOS', msg:'Itaú → negociante / BMG → não negociante', payload:'{ "Banco_negociante": "Itaú", "Banco_nao_negociante": "BMG" }'},
+      {t:4,  type:'aet-webhook', label:'VALIDAÇÃO BANCOS',     msg:'GET /bancos/negociantes → Itaú OK, BMG REPROVADO', payload:'{ "itau": true, "bmg": false }'},
+      {t:4,  type:'aet-error',   label:'BMG — REGISTRADO',     msg:'BMG adicionado como comentário no lead', payload:'{ "comentario": "Cliente possui financiamento BMG (nao negociante). Nao sera contemplado." }'},
+      {t:5,  type:'aet-field',   label:'CAMPO ATUALIZADO',     msg:'Titularidade capturada — Itaú',       payload:'{ "Titularidade": "SIM" }'},
+      {t:6,  type:'aet-webhook', label:'WEBHOOK DISPARADO',    msg:'POST /crm/lead/update → Em Qualificação', payload:'{ "stage": "Em_Qualificacao", "banco_ativo": "Itaú" }'},
+      {t:8,  type:'aet-field',   label:'CAMPO ATUALIZADO',     msg:'RegiaoAtuacao confirmada',             payload:'{ "RegiaoAtuacao": "DF - Taguatinga", "elegivel": true }'},
+      {t:10, type:'aet-field',   label:'CAMPO ATUALIZADO',     msg:'Unidade selecionada',                 payload:'{ "Unidade": "Taguatinga" }'},
+      {t:10, type:'aet-webhook', label:'WEBHOOK DISPARADO',    msg:'POST /crm/lead/update → Qualificado', payload:'{ "stage": "Qualificado_Agendado", "unidade": "Taguatinga" }'},
+      {t:10, type:'aet-response',label:'RETORNO BITRIX24',     msg:'Consultor atribuído via alternância automática', payload:'{ "consultor": "Juliana", "unidade": "Taguatinga", "horarios": ["09:00","13:00"] }'},
+      {t:12, type:'aet-field',   label:'CAMPO ATUALIZADO',     msg:'Horário agendado confirmado',         payload:'{ "horario_agendado": "amanha 13:00", "qualificacao_concluida": true }'},
+      {t:13, type:'aet-ok',      label:'QUALIFICACAO CONCLUIDA', msg:'Card finalizado — handoff realizado', payload:'{ "qualificacao_concluida": true, "atendimento_encerrado": true, "card_id": "LIB-3052" }'}
+    ],
+    fieldUpdates: [
+      {t:2,  field:'PrimeiroNome',          val:'Lucas'},
+      {t:4,  field:'ProblemaPrincipal',     val:'FinanciamentoVeicular'},
+      {t:4,  field:'StatusPagamento',       val:'ATRASADO'},
+      {t:4,  field:'Banco',                val:'Itaú (negociante) + BMG (não negociante)'},
+      {t:5,  field:'Titularidade',          val:'SIM'},
+      {t:8,  field:'RegiaoAtuacao',         val:'DF — Taguatinga'},
+      {t:10, field:'Unidade',              val:'Taguatinga'},
+      {t:12, field:'qualificacao_concluida', val:'true'},
+      {t:12, field:'horario_agendado',      val:'amanhã 13:00'},
+      {t:13, field:'atendimento_encerrado', val:'true'}
+    ],
+    bitrix: [
+      {t:1,  stage:0, card:{title:'Novo lead — WhatsApp',          tags:['whatsapp','novo'],                      cls:''}},
+      {t:4,  stage:1, card:{title:'Lucas — Em qualificação',       tags:['em_qualificacao','itau','bmg_excluido'], cls:'highlight'}},
+      {t:10, stage:2, card:{title:'Lucas — Itaú · ATRASADO',       tags:['qualificado','taguatinga','agendado_13h'], cls:'success'},
+             consultor:{nome:'Juliana', unidade:'Taguatinga', agenda:'amanhã 13:00', contato:'Bitrix24 Contact Center', card:'LIB-3052'}}
+    ]
+  },
+  {
+    name: "Múltiplos financiamentos — 2 bancos não negociantes (BMG + Safra)",
+    messages: [
+      {who:'bot', text:'Olá! Aqui é a Lili e faço parte da Liberta Assessoria. Realizamos uma análise para verificar a possibilidade de redução das parcelas, podendo chegar a até 45%. Para continuar, como posso te chamar?'},
+      {who:'user', text:'Beatriz'},
+      {who:'bot', text:'Oi, Beatriz! Você quer ajuda com financiamento veicular ou empréstimo com garantia de veículo?'},
+      {who:'user', text:'Tenho dois financiamentos, um no BMG e outro no Safra.'},
+      {who:'bot', text:'Beatriz, infelizmente não conseguiremos dar continuidade à análise. Tanto o BMG quanto o Safra são bancos mais restritivos e resistentes a negociações, não permitindo os descontos nem aceitando o formato de tratativa que realizamos aqui na Liberta Assessoria. Atuamos apenas com bancos negociantes que possibilitam reduzir o valor das parcelas e quitar o veículo com desconto garantido em contrato. Por esse motivo, não será possível prosseguir com sua proposta neste momento. Agradecemos muito pelo seu contato e por considerar a Liberta Assessoria em sua busca por uma solução!'}
+    ],
+    apiEvents: [
+      {t:1, type:'aet-webhook', label:'WEBHOOK DISPARADO',    msg:'POST /crm/lead/create',               payload:'{ "source": "whatsapp", "agent": "qualificacao" }'},
+      {t:2, type:'aet-field',   label:'CAMPO ATUALIZADO',     msg:'PrimeiroNome capturado',               payload:'{ "PrimeiroNome": "Beatriz" }'},
+      {t:4, type:'aet-field',   label:'BANCOS IDENTIFICADOS', msg:'BMG e Safra → ambos não negociantes',  payload:'{ "Banco": ["BMG","Safra"], "negociantes": [false,false] }'},
+      {t:4, type:'aet-webhook', label:'VALIDAÇÃO BANCOS',     msg:'GET /bancos/negociantes → BMG REPROVADO, Safra REPROVADO', payload:'{ "bmg": false, "safra": false }'},
+      {t:4, type:'aet-error',   label:'HARD STOP ACIONADO',   msg:'Ambos os bancos não atendidos — BMG + Safra', payload:'{ "banco_nao_atendido": true, "atendimento_encerrado": true }'},
+      {t:5, type:'aet-error',   label:'ENCERRAMENTO',         msg:'POST /crm/lead/update → Não Atendido', payload:'{ "stage": "Fora_Escopo_Nao_Atendido", "motivo": "banco_nao_atendido", "bancos": ["BMG","Safra"] }'}
+    ],
+    fieldUpdates: [
+      {t:2, field:'PrimeiroNome',          val:'Beatriz'},
+      {t:4, field:'Banco',                val:'BMG + Safra (ambos não negociantes)'},
+      {t:4, field:'atendimento_encerrado', val:'true'}
+    ],
+    bitrix: [
+      {t:1, stage:0, card:{title:'Novo lead — WhatsApp',     tags:['whatsapp','novo'],                  cls:''}},
+      {t:2, stage:1, card:{title:'Beatriz — Em qualificação', tags:['em_qualificacao'],                  cls:'highlight'}},
+      {t:4, stage:3, card:{title:'Beatriz — BMG + Safra',    tags:['banco_nao_atendido','encerrado'],    cls:'highlight'}}
+    ]
+  },
+  {
+    name: "Conteúdo impróprio — repreensão e encerramento",
+    messages: [
+      {who:'bot',    text:'Olá! Aqui é a Lili e faço parte da Liberta Assessoria. Realizamos uma análise para verificar a possibilidade de redução das parcelas, podendo chegar a até 45%. Para continuar, como posso te chamar?'},
+      {who:'user',   text:'Carlos'},
+      {who:'bot',    text:'Oi, Carlos! Você quer ajuda com financiamento veicular ou empréstimo com garantia de veículo?'},
+      {who:'user',   text:'[envia imagem imprópria]'},
+      {who:'system', text:'⚠ FIREWALL ACIONADO — Conteúdo impróprio detectado antes de qualquer outra lógica de fluxo'},
+      {who:'bot',    text:'Este canal é exclusivo para atendimento de clientes da Liberta Assessoria Financeira. O envio deste tipo de conteúdo não é permitido e não será tolerado. O seu atendimento foi encerrado.'}
+    ],
+    apiEvents: [
+      {t:1, type:'aet-webhook', label:'WEBHOOK DISPARADO',    msg:'POST /crm/lead/create',                  payload:'{ "source": "whatsapp", "agent": "qualificacao" }'},
+      {t:2, type:'aet-field',   label:'CAMPO ATUALIZADO',     msg:'PrimeiroNome capturado',                  payload:'{ "PrimeiroNome": "Carlos" }'},
+      {t:4, type:'aet-error',   label:'CONTEÚDO IMPRÓPRIO',   msg:'Firewall acionado antes do fluxo — imagem imprópria detectada', payload:'{ "motivo": "ConteudoImproprio", "tipo": "imagem_impropria", "etapa_atual": "E2" }'},
+      {t:4, type:'aet-error',   label:'HARD STOP ACIONADO',   msg:'Encerramento imediato — ConteudoImproprio', payload:'{ "atendimento_encerrado": true, "requer_revisao_humana": true }'},
+      {t:6, type:'aet-error',   label:'ENCERRAMENTO',         msg:'POST /crm/lead/update → Conteúdo Impróprio', payload:'{ "stage": "Fora_Escopo_Nao_Atendido", "motivo": "ConteudoImproprio", "flag_revisao": true }'}
+    ],
+    fieldUpdates: [
+      {t:2, field:'PrimeiroNome',          val:'Carlos'},
+      {t:4, field:'fora_escopo_motivo',    val:'ConteudoImproprio'},
+      {t:4, field:'atendimento_encerrado', val:'true'}
+    ],
+    bitrix: [
+      {t:1, stage:0, card:{title:'Novo lead — WhatsApp',       tags:['whatsapp','novo'],                    cls:''}},
+      {t:2, stage:1, card:{title:'Carlos — Em qualificação',   tags:['em_qualificacao'],                    cls:'highlight'}},
+      {t:4, stage:3, card:{title:'Carlos — Conteúdo Impróprio', tags:['ConteudoImproprio','revisao_humana'], cls:'highlight'}}
+    ]
+  },
+  {
+    name: "Lista de transmissão — spam de bom-dia (sem resposta)",
+    messages: [
+      {who:'user',   text:'🌞 Bom dia! Que o seu dia seja repleto de luz e alegrias! 🌟✨'},
+      {who:'system', text:'⚙ SISTEMA — Mensagem fora do contexto de qualificação. Nenhuma resposta enviada ao remetente.'},
+      {who:'user',   text:'🌸 Bom dia! Comece o dia com um sorriso! 😊🌺'},
+      {who:'system', text:'⚙ SISTEMA — Padrão de lista de transmissão confirmado. Lead marcado como Spam. Revisão manual acionada.'}
+    ],
+    apiEvents: [
+      {t:1, type:'aet-webhook', label:'WEBHOOK RECEBIDO',     msg:'POST /crm/lead/create — mensagem fora de escopo', payload:'{ "source": "whatsapp", "conteudo": "bom_dia_animado" }'},
+      {t:1, type:'aet-error',   label:'SPAM DETECTADO',       msg:'Mensagem não relacionada ao serviço — sem abertura de fluxo', payload:'{ "tipo": "lista_transmissao", "resposta_enviada": false }'},
+      {t:3, type:'aet-error',   label:'PADRÃO CONFIRMADO',    msg:'Segunda mensagem idêntica — padrão de broadcast confirmado', payload:'{ "tipo": "lista_transmissao", "ocorrencias": 2 }'},
+      {t:3, type:'aet-error',   label:'LEAD MARCADO SPAM',    msg:'POST /crm/lead/update → Spam',          payload:'{ "stage": "Spam", "motivo": "lista_transmissao", "bloqueio_manual_requerido": true }'},
+      {t:4, type:'aet-webhook', label:'REVISÃO ACIONADA',     msg:'Notificação enviada para equipe — bloquear número na plataforma WhatsApp', payload:'{ "acao_requerida": "bloqueio_permanente_whatsapp", "responsavel": "equipe_liberta" }'}
+    ],
+    fieldUpdates: [
+      {t:1, field:'fora_escopo_motivo',    val:'ListaTransmissao_Spam'},
+      {t:3, field:'atendimento_encerrado', val:'true'}
+    ],
+    bitrix: [
+      {t:1, stage:0, card:{title:'Novo contato — WhatsApp',   tags:['whatsapp','suspeito'],                cls:''}},
+      {t:3, stage:3, card:{title:'Spam — Lista de transmissão', tags:['spam','lista_transmissao','bloqueio_pendente'], cls:'highlight'}}
+    ]
   }
 ];
 // ===== SIMULADOR ENGINE =====
@@ -829,6 +1046,12 @@ function addMsg(who, text){
     lbl.className = 'msg-label';
     lbl.textContent = 'Lili';
     wrap.appendChild(lbl);
+  }
+  if(who === 'system'){
+    var lbl2 = document.createElement('div');
+    lbl2.className = 'msg-label';
+    lbl2.textContent = 'Sistema · Operador';
+    wrap.appendChild(lbl2);
   }
   var txt = document.createElement('div');
   txt.textContent = text;
